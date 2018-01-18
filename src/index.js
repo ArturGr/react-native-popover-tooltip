@@ -170,15 +170,15 @@ class PopoverTooltip extends React.PureComponent<Props, State> {
     const componentWrapper = this.wrapperComponent;
     invariant(componentWrapper, "should be set");
     componentWrapper.measure((x, y, width, height, pageX, pageY) => {
+      let tooltipTriangleDown = true;
       const fullWidth = pageX + tooltipContainerWidth
         + (width - tooltipContainerWidth) / 2;
       const tooltipContainerX_final = fullWidth > window.width
         ? window.width - tooltipContainerWidth
         : pageX + (width - tooltipContainerWidth) / 2;
-      let tooltipContainerY_final = this.state.tooltipTriangleDown
+      let tooltipContainerY_final = tooltipTriangleDown
         ? pageY - tooltipContainerHeight - 20
         : pageY + tooltipContainerHeight - 20;
-      let tooltipTriangleDown = this.state.tooltipTriangleDown;
       if (pageY - tooltipContainerHeight - 20 < 0) {
         tooltipContainerY_final = pageY + height + 20;
         tooltipTriangleDown = false;
@@ -256,13 +256,14 @@ class PopoverTooltip extends React.PureComponent<Props, State> {
     });
 
     const labelContainerStyle = this.props.labelContainerStyle;
-    const borderStyle =
-      labelContainerStyle && labelContainerStyle.backgroundColor
-        ? { borderTopColor: labelContainerStyle.backgroundColor }
-        : null;
+    
     let triangleDown = null;
     let triangleUp = null;
     if (this.state.tooltipTriangleDown) {
+      const borderStyle =
+      labelContainerStyle && labelContainerStyle.backgroundColor
+        ? { borderTopColor: labelContainerStyle.backgroundColor }
+        : null;
       triangleDown = (
         <View style={[
           styles.triangleDown,
@@ -274,6 +275,10 @@ class PopoverTooltip extends React.PureComponent<Props, State> {
         ]} />
       );
     } else {
+      const borderStyle =
+      labelContainerStyle && labelContainerStyle.backgroundColor
+        ? { borderBottomColor: labelContainerStyle.backgroundColor }
+        : null;
       triangleUp = (
         <View style={[
           styles.triangleUp,
